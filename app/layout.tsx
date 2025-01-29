@@ -1,3 +1,4 @@
+import { Toaster } from '@/components/ui/sonner';
 import { fontMap } from '@/lib/utils/font';
 import { Provider } from '@/providers';
 
@@ -14,6 +15,7 @@ export default function RootLayout({ children }: RootLayoutProps) {
     <html lang="en">
       <body className={`${inter.variable} antialiased`}>
         <Provider>{children}</Provider>
+        <Toaster richColors />
       </body>
     </html>
   );

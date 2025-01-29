@@ -8,7 +8,8 @@
     "start": "next start",
     "lint": "next lint",
     "db:generate": "bunx drizzle-kit generate",
-    "db:migrate": "tsx ./drizzle/migrate.ts"
+    "db:migrate": "tsx ./drizzle/migrate.ts",
+    "db:studio": "bunx drizzle-kit studio"
   },
   "dependencies": {
     "@auth/drizzle-adapter": "^1.7.4",
@@ -42,6 +43,7 @@
     "@radix-ui/react-tooltip": "^1.1.7",
     "@tanstack/react-query": "^5.65.1",
     "@tanstack/react-query-devtools": "^5.65.1",
+    "better-auth": "^1.1.15",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "cmdk": "^1.0.0",
@@ -53,7 +55,6 @@
     "input-otp": "^1.4.2",
     "lucide-react": "^0.474.0",
     "next": "15.1.6",
-    "next-auth": "^5.0.0-beta.25",
     "next-themes": "^0.4.4",
     "nuqs": "^2.3.1",
     "pg": "^8.13.1",

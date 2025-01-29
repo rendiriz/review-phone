@@ -1,12 +1,22 @@
 import { NextResponse, type NextRequest } from 'next/server';
 
-import { auth } from '@/auth';
+import { betterFetch } from '@better-fetch/fetch';
+
+import type { auth } from '@/auth';
+
+type Session = typeof auth.$Infer.Session;
 
 const PROTECTED_ROUTES = ['/d'];
 
 export default async function authMiddleware(request: NextRequest) {
-  const session = await auth();
   const { pathname } = request.nextUrl;
+
+  const { data: session } = await betterFetch<Session>('/api/auth/get-session', {
+    baseURL: request.nextUrl.origin,
+    headers: {
+      cookie: request.headers.get('cookie') || '',
+    },
+  });
 
   if (PROTECTED_ROUTES.some((route) => pathname.startsWith(route))) {
     if (!session) {

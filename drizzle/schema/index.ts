@@ -1,2 +1,2 @@
 export { tests } from './tests';
-export { users, sessions, accounts, verificationTokens } from './auth';
+export { users, sessions, accounts, verifications } from './auth';
