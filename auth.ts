@@ -9,6 +9,9 @@ export const auth = betterAuth({
     provider: 'pg',
     usePlural: true,
   }),
+  advanced: {
+    generateId: false,
+  },
   secondaryStorage: {
     get: async (key) => {
       const value = await redis.get(key);
