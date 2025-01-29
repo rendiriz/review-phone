@@ -1,14 +1,14 @@
 import { sql } from 'drizzle-orm';
-import { index, pgTable, timestamp, varchar } from 'drizzle-orm/pg-core';
+import { index, pgTable, timestamp, uuid, varchar } from 'drizzle-orm/pg-core';
 import { createInsertSchema, createSelectSchema, createUpdateSchema } from 'drizzle-zod';
 import { z } from 'zod';
 
 export const tests = pgTable(
   'tests',
   {
-    id: varchar()
+    id: uuid()
       .primaryKey()
-      .default(sql`gen_ulid()`),
+      .default(sql`gen_random_uuid()`),
     name: varchar('name', { length: 255 }).notNull(),
 
     createdAt: timestamp('created_at', { mode: 'string' }).notNull().defaultNow(),

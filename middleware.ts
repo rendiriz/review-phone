@@ -1,0 +1,23 @@
+import { NextResponse, type NextRequest } from 'next/server';
+
+import { auth } from '@/auth';
+
+const PROTECTED_ROUTES = ['/d'];
+
+export default async function authMiddleware(request: NextRequest) {
+  const session = await auth();
+  const { pathname } = request.nextUrl;
+
+  if (PROTECTED_ROUTES.some((route) => pathname.startsWith(route))) {
+    if (!session) {
+      return NextResponse.redirect(new URL('/', request.url));
+    }
+    return NextResponse.next();
+  }
+
+  return NextResponse.next();
+}
+
+export const config = {
+  matcher: ['/((?!api|_next/static|_next/image|favicon.ico|public).*)'],
+};
