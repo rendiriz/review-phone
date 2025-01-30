@@ -2,7 +2,7 @@
 
 import { useRouter } from 'next/navigation';
 
-import { BadgeCheck, Bell, ChevronsUpDown, CreditCard, LogOut, Sparkles } from 'lucide-react';
+import { BadgeCheck, ChevronsUpDown, LogOut, Sparkles } from 'lucide-react';
 
 import { authClient } from '@/auth-client';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
@@ -101,17 +101,12 @@ export function NavUser({
                 <BadgeCheck />
                 Account
               </DropdownMenuItem>
-              <DropdownMenuItem>
-                <CreditCard />
-                Billing
-              </DropdownMenuItem>
-              <DropdownMenuItem>
-                <Bell />
-                Notifications
-              </DropdownMenuItem>
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
-            <DropdownMenuItem onClick={handleSignOut}>
+            <DropdownMenuItem
+              className="cursor-pointer"
+              onClick={handleSignOut}
+            >
               <LogOut />
               Log out
             </DropdownMenuItem>

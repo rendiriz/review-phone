@@ -1,6 +1,7 @@
 import * as React from 'react';
+import Link from 'next/link';
 
-import { GalleryVerticalEnd, Minus, Plus } from 'lucide-react';
+import { Minus, Plus, Smartphone } from 'lucide-react';
 
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
 import {
@@ -29,17 +30,12 @@ const data = {
   },
   navMain: [
     {
-      title: 'Getting Started',
+      title: 'Master',
       url: '#',
       items: [
         {
-          title: 'Installation',
-          url: '#',
-          isActive: true,
-        },
-        {
-          title: 'Project Structure',
-          url: '#',
+          title: 'Brand',
+          url: '/d/master/brand',
         },
       ],
     },
@@ -56,15 +52,14 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
               size="lg"
               asChild
             >
-              <a href="#">
+              <Link href="/d">
                 <div className="flex aspect-square size-8 items-center justify-center rounded-lg bg-sidebar-primary text-sidebar-primary-foreground">
-                  <GalleryVerticalEnd className="size-4" />
+                  <Smartphone className="size-4" />
                 </div>
                 <div className="flex flex-col gap-0.5 leading-none">
-                  <span className="font-semibold">Documentation</span>
-                  <span className="">v1.0.0</span>
+                  <span className="font-semibold">Review</span>
                 </div>
-              </a>
+              </Link>
             </SidebarMenuButton>
           </SidebarMenuItem>
         </SidebarMenu>
@@ -91,11 +86,8 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                       <SidebarMenuSub>
                         {item.items.map((item) => (
                           <SidebarMenuSubItem key={item.title}>
-                            <SidebarMenuSubButton
-                              asChild
-                              isActive={item.isActive}
-                            >
-                              <a href={item.url}>{item.title}</a>
+                            <SidebarMenuSubButton asChild>
+                              <Link href={item.url}>{item.title}</Link>
                             </SidebarMenuSubButton>
                           </SidebarMenuSubItem>
                         ))}

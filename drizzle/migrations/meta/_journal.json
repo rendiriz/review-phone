@@ -15,6 +15,13 @@
       "when": 1738169169528,
       "tag": "0001_workable_infant_terrible",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1738226122897,
+      "tag": "0002_far_mongu",
+      "breakpoints": true
     }
   ]
 }
