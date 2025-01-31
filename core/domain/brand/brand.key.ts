@@ -4,6 +4,7 @@ export const brandKeys = {
   all: ['brand'] as const,
   lists: () => [...brandKeys.all, 'list'] as const,
   list: (filter: Filter) => [...brandKeys.lists(), filter] as const,
+  detail: (slug: string) => [...brandKeys.all, 'detail', slug] as const,
 };
 
 export const brandCacheKeys = {

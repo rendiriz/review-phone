@@ -6,6 +6,8 @@ import { DataTableColumnHeader } from '@/components/shared/data-table-column-hea
 import { statuses } from '@/core/domain/brand/brand.constant';
 import type { Brand } from '@/core/domain/brand/brand.type';
 
+import { DataTableRowActions } from './data-table-row-actions';
+
 export const columns: ColumnDef<Brand>[] = [
   {
     id: 'name',
@@ -17,11 +19,14 @@ export const columns: ColumnDef<Brand>[] = [
         title="Name"
       />
     ),
-    cell: ({ row }) => row.getValue('name'),
+    cell: ({ row }) => {
+      return <div className="flex w-full">{row.getValue('name')}</div>;
+    },
   },
   {
     id: 'status',
     meta: 'Status',
+    maxSize: 150,
     accessorFn: (row) => row.status,
     header: ({ column }) => (
       <DataTableColumnHeader
@@ -46,9 +51,9 @@ export const columns: ColumnDef<Brand>[] = [
       return value.includes(row.getValue(id));
     },
   },
-  // {row.original.user.userId}
-  // {
-  //   id: 'actions',
-  //   cell: ({ row }) => <DataTableRowActions row={row} />,
-  // },
+  {
+    id: 'actions',
+    maxSize: 75,
+    cell: ({ row }) => <DataTableRowActions row={row} />,
+  },
 ];

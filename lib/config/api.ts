@@ -8,5 +8,8 @@ export const API_ENDPOINTS = {
   brands: {
     base: '/brands',
     list: (qs: string) => `/brands${qs}`,
+    create: '/brands',
+    detail: (slug: string) => `/brands/${slug}`,
+    update: (slug: string) => `/brands/${slug}`,
   },
 } as const;

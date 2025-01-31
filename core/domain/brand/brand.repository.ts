@@ -1,10 +1,11 @@
 import { serializeSearchParams } from '@/core/domain/brand/brand.param';
-import type { PaginatedBrand } from '@/core/domain/brand/brand.type';
+import type { Brand, BrandPayload, PaginatedBrand } from '@/core/domain/brand/brand.type';
 import { API_ENDPOINTS, API_URL } from '@/lib/config/api';
 import type { Filter } from '@/lib/types/filter';
 
 export interface BrandRepository {
   list(filter: Filter): Promise<PaginatedBrand>;
+  create(payload: BrandPayload): Promise<Brand>;
 }
 
 export class BrandRepositoryImpl implements BrandRepository {
@@ -14,11 +15,34 @@ export class BrandRepositoryImpl implements BrandRepository {
 
     try {
       const response = await fetch(`${API_URL}${endpoint}`, {
+        headers: {
+          'Content-Type': 'application/json',
+        },
         method: 'GET',
       });
 
       if (!response.ok) {
         throw new Error('Failed to fetch brands');
+      }
+
+      return response.json();
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  async create(payload: BrandPayload): Promise<Brand> {
+    try {
+      const response = await fetch(`${API_URL}${API_ENDPOINTS.brands.create}`, {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        method: 'POST',
+        body: JSON.stringify(payload),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to create brand');
       }
 
       return response.json();

@@ -1,9 +1,10 @@
 import { BrandRepositoryImpl, type BrandRepository } from '@/core/domain/brand/brand.repository';
-import type { PaginatedBrand } from '@/core/domain/brand/brand.type';
+import type { Brand, BrandPayload, PaginatedBrand } from '@/core/domain/brand/brand.type';
 import type { Filter } from '@/lib/types/filter';
 
 export interface BrandService {
   list(filter: Filter): Promise<PaginatedBrand>;
+  create(payload: BrandPayload): Promise<Brand>;
 }
 
 export class BrandServiceImpl implements BrandService {
@@ -15,5 +16,9 @@ export class BrandServiceImpl implements BrandService {
 
   async list(filter: Filter): Promise<PaginatedBrand> {
     return this.brandRepository.list(filter);
+  }
+
+  async create(payload: BrandPayload): Promise<Brand> {
+    return this.brandRepository.create(payload);
   }
 }

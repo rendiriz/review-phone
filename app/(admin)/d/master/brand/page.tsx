@@ -1,9 +1,6 @@
 import type { Metadata } from 'next';
 
-import { Plus } from 'lucide-react';
-
-import { Button } from '@/components/ui/button';
-
+import { AddSheet } from './components/add-sheet';
 import { BrandClientPage } from './page.client';
 
 export const metadata: Metadata = {
@@ -17,10 +14,7 @@ export default function BrandPage() {
       <div className="flex items-center justify-between">
         <h1 className="scroll-m-20 text-3xl font-bold tracking-tight">Brand</h1>
 
-        <Button>
-          <Plus />
-          Create
-        </Button>
+        <AddSheet />
       </div>
 
       <BrandClientPage />

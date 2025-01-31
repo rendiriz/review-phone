@@ -120,6 +120,7 @@ export function DataTable<TData, TValue>({
                     <TableHead
                       key={header.id}
                       colSpan={header.colSpan}
+                      style={{ width: header.getSize() }}
                     >
                       {header.isPlaceholder
                         ? null
