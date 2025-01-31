@@ -9,12 +9,12 @@ import { Button } from '@/components/ui/button';
 import {
   DropdownMenu,
   DropdownMenuContent,
-  DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { BrandSelectSchema } from '@/core/domain/brand/brand.schema';
 
 import { Delete } from './delete';
+import { Edit } from './edit';
 
 interface DataTableRowActionsProps<TData> {
   row: Row<TData>;
@@ -43,7 +43,11 @@ export function DataTableRowActions<TData>({ row }: DataTableRowActionsProps<TDa
         align="end"
         className="w-[160px]"
       >
-        <DropdownMenuItem>Edit</DropdownMenuItem>
+        <Edit
+          slug={brand.slug}
+          isOpenDropdown={isOpen}
+          setIsOpenDropdown={setIsOpen}
+        />
         <Delete
           slug={brand.slug}
           isOpenDropdown={isOpen}

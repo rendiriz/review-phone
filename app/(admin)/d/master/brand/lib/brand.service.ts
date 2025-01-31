@@ -4,7 +4,9 @@ import type { Filter } from '@/lib/types/filter';
 
 export interface BrandService {
   list(filter: Filter): Promise<PaginatedBrand>;
+  detail(slug: string): Promise<Brand>;
   create(payload: BrandPayload): Promise<Brand>;
+  update(slug: string, payload: BrandPayload): Promise<{ message: string }>;
   delete(slug: string): Promise<{ message: string }>;
 }
 
@@ -19,8 +21,16 @@ export class BrandServiceImpl implements BrandService {
     return this.brandRepository.list(filter);
   }
 
+  async detail(slug: string): Promise<Brand> {
+    return this.brandRepository.detail(slug);
+  }
+
   async create(payload: BrandPayload): Promise<Brand> {
     return this.brandRepository.create(payload);
+  }
+
+  async update(slug: string, payload: BrandPayload): Promise<{ message: string }> {
+    return this.brandRepository.update(slug, payload);
   }
 
   async delete(slug: string): Promise<{ message: string }> {

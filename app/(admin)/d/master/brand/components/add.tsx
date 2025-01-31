@@ -7,22 +7,13 @@ import { Plus } from 'lucide-react';
 
 import { BrandForm } from '@/components/composite/brand/brand-form';
 import { Button } from '@/components/ui/button';
-import {
-  Sheet,
-  SheetClose,
-  SheetContent,
-  SheetDescription,
-  SheetFooter,
-  SheetHeader,
-  SheetTitle,
-  SheetTrigger,
-} from '@/components/ui/sheet';
+import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
 import { brandKeys } from '@/core/domain/brand/brand.key';
 import { BrandPayload } from '@/core/domain/brand/brand.type';
 
 import { BrandServiceImpl } from '../lib/brand.service';
 
-export function AddSheet() {
+export function Add() {
   const queryClient = useQueryClient();
 
   const [isOpen, setIsOpen] = useState(false);

@@ -5,7 +5,9 @@ import type { Filter } from '@/lib/types/filter';
 
 export interface BrandRepository {
   list(filter: Filter): Promise<PaginatedBrand>;
+  detail(slug: string): Promise<Brand>;
   create(payload: BrandPayload): Promise<Brand>;
+  update(slug: string, payload: BrandPayload): Promise<{ message: string }>;
   delete(slug: string): Promise<{ message: string }>;
 }
 
@@ -32,6 +34,25 @@ export class BrandRepositoryImpl implements BrandRepository {
     }
   }
 
+  async detail(slug: string): Promise<Brand> {
+    try {
+      const response = await fetch(`${API_URL}${API_ENDPOINTS.brands.detail(slug)}`, {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        method: 'GET',
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to fetch brand');
+      }
+
+      return response.json();
+    } catch (error) {
+      throw error;
+    }
+  }
+
   async create(payload: BrandPayload): Promise<Brand> {
     try {
       const response = await fetch(`${API_URL}${API_ENDPOINTS.brands.create}`, {
@@ -44,6 +65,26 @@ export class BrandRepositoryImpl implements BrandRepository {
 
       if (!response.ok) {
         throw new Error('Failed to create brand');
+      }
+
+      return response.json();
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  async update(slug: string, payload: BrandPayload): Promise<{ message: string }> {
+    try {
+      const response = await fetch(`${API_URL}${API_ENDPOINTS.brands.update(slug)}`, {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        method: 'PUT',
+        body: JSON.stringify(payload),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to update brand');
       }
 
       return response.json();

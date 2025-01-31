@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
 
-import { AddSheet } from './components/add-sheet';
+import { Add } from './components/add';
 import { BrandClientPage } from './page.client';
 
 export const metadata: Metadata = {
@@ -14,7 +14,7 @@ export default function BrandPage() {
       <div className="flex items-center justify-between">
         <h1 className="scroll-m-20 text-3xl font-bold tracking-tight">Brand</h1>
 
-        <AddSheet />
+        <Add />
       </div>
 
       <BrandClientPage />

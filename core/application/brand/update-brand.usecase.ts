@@ -1,7 +1,6 @@
 import 'server-only';
 
-import { eq } from 'drizzle-orm';
-import slugify from 'slugify';
+import { eq, sql } from 'drizzle-orm';
 
 import { brandKeys } from '@/core/domain/brand/brand.key';
 import { BrandPayload } from '@/core/domain/brand/brand.type';
@@ -9,21 +8,19 @@ import { db } from '@/drizzle/db';
 import { brands } from '@/drizzle/schema/brands';
 import { redis } from '@/lib/config/redis';
 
-export async function createBrand(payload: BrandPayload) {
-  const slug = slugify(payload.name, { lower: true });
-
+export async function updateBrand(slug: string, payload: BrandPayload) {
   const existingBrand = await db.query.brands.findFirst({
     where: eq(brands.slug, slug),
   });
 
-  if (existingBrand) {
-    throw new Error('Brand with this name already exists');
+  if (!existingBrand) {
+    throw new Error('Brand not found');
   }
 
-  const [brand] = await db
-    .insert(brands)
-    .values({ ...payload, slug, country: 'United States', status: 'active' })
-    .returning();
+  await db
+    .update(brands)
+    .set({ ...payload, updatedAt: sql`NOW()` })
+    .where(eq(brands.slug, slug));
 
   const cacheKey = [...brandKeys.all, '*'].join(':');
   const cache = await redis.keys(cacheKey);
@@ -31,5 +28,5 @@ export async function createBrand(payload: BrandPayload) {
     await redis.del(cache);
   }
 
-  return brand;
+  return;
 }

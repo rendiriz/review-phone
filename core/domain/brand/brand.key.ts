@@ -11,4 +11,5 @@ export const brandCacheKeys = {
   all: ['brand'],
   lists: () => [...brandKeys.all, 'list'].join(':'),
   list: (filter: string) => [...brandKeys.lists(), filter].join(':'),
+  detail: (slug: string) => [...brandKeys.all, 'detail', slug].join(':'),
 };
