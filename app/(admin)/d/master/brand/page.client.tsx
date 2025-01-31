@@ -40,7 +40,7 @@ export function BrandClientPage() {
     ...(status && { status }),
   };
 
-  const { data, isLoading, isError } = useQuery({
+  const { data, isPending, isError } = useQuery({
     queryKey: brandKeys.list(queryParams),
     queryFn: () => new BrandServiceImpl().list(queryParams),
     placeholderData: keepPreviousData,
@@ -73,7 +73,7 @@ export function BrandClientPage() {
       onPageChange={setPage}
       onPageSizeChange={setPageSize}
       onFilterChange={handleFilterChange}
-      isLoading={isLoading}
+      isLoading={isPending}
       isError={isError}
     />
   );

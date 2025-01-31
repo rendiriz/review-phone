@@ -7,7 +7,14 @@ import { Plus } from 'lucide-react';
 
 import { BrandForm } from '@/components/composite/brand/brand-form';
 import { Button } from '@/components/ui/button';
-import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
+import {
+  Sheet,
+  SheetContent,
+  SheetDescription,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from '@/components/ui/sheet';
 import { brandKeys } from '@/core/domain/brand/brand.key';
 import { BrandPayload } from '@/core/domain/brand/brand.type';
 
@@ -43,16 +50,19 @@ export function Add() {
           Add Brand
         </Button>
       </SheetTrigger>
-      <SheetContent>
+      <SheetContent className="max-w w-full md:max-w-[500px]">
         <SheetHeader>
           <SheetTitle>Add Brand</SheetTitle>
+          <SheetDescription>Click save when you're done.</SheetDescription>
+        </SheetHeader>
 
+        <div className="grid gap-4 py-4">
           <BrandForm
             initialData={null}
             onSubmit={handleSubmit}
             isLoading={isPending}
           />
-        </SheetHeader>
+        </div>
       </SheetContent>
     </Sheet>
   );

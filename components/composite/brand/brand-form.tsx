@@ -16,6 +16,7 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
+import { Switch } from '@/components/ui/switch';
 import { Textarea } from '@/components/ui/textarea';
 import { BrandFormSchema } from '@/core/domain/brand/brand.schema';
 import { Brand, BrandPayload } from '@/core/domain/brand/brand.type';
@@ -32,6 +33,7 @@ export const BrandForm = ({ initialData = null, onSubmit, isLoading }: BrandForm
     defaultValues: {
       name: '',
       description: '',
+      status: 'active',
     },
     mode: 'onChange',
   });
@@ -86,6 +88,28 @@ export const BrandForm = ({ initialData = null, onSubmit, isLoading }: BrandForm
                     placeholder="Description"
                     value={field.value || ''}
                   />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={form.control}
+            name="status"
+            render={({ field, fieldState: { error } }) => (
+              <FormItem className="space-y-2">
+                <FormLabel>Status</FormLabel>
+                <FormControl>
+                  <div className="flex items-center space-x-2">
+                    <Switch
+                      checked={field.value === 'active' ? true : false}
+                      onCheckedChange={(value) => {
+                        const result = value ? 'active' : 'inactive';
+                        form.setValue('status', result);
+                      }}
+                    />
+                  </div>
                 </FormControl>
                 <FormMessage />
               </FormItem>

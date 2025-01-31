@@ -22,7 +22,7 @@ export async function createBrand(payload: BrandPayload) {
 
   const [brand] = await db
     .insert(brands)
-    .values({ ...payload, slug, country: 'United States', status: 'active' })
+    .values({ ...payload, slug, country: 'United States' })
     .returning();
 
   const cacheKey = [...brandKeys.all, '*'].join(':');

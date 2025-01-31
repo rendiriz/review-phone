@@ -7,7 +7,9 @@ export const BrandSelectSchema = createSelectSchema(brands);
 export const BrandFormSchema = createInsertSchema(brands, {
   name: (s) => s.min(1, 'Name is required.').max(255, 'Name must be at most 255 characters.'),
   description: (s) => s.nullable(),
+  status: (s) => s,
 }).pick({
   name: true,
   description: true,
+  status: true,
 });
