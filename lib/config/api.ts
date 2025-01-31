@@ -13,4 +13,8 @@ export const API_ENDPOINTS = {
     update: (slug: string) => `/brands/${slug}`,
     delete: (slug: string) => `/brands/${slug}`,
   },
+  upload: {
+    base: '/upload',
+    r2: '/upload/r2',
+  },
 } as const;

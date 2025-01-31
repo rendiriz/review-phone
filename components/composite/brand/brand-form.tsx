@@ -1,6 +1,7 @@
 'use client';
 
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
+import Image from 'next/image';
 
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Loader2 } from 'lucide-react';
@@ -10,6 +11,7 @@ import { Button } from '@/components/ui/button';
 import {
   Form,
   FormControl,
+  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -28,6 +30,8 @@ interface BrandFormProps {
 }
 
 export const BrandForm = ({ initialData = null, onSubmit, isLoading }: BrandFormProps) => {
+  const [imagePreview, setImagePreview] = useState<string | null>(initialData?.image || null);
+
   const form = useForm<BrandPayload>({
     resolver: zodResolver(BrandFormSchema),
     defaultValues: {
@@ -49,6 +53,18 @@ export const BrandForm = ({ initialData = null, onSubmit, isLoading }: BrandForm
 
     if (!initialData) {
       form.reset();
+    }
+  };
+
+  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setImagePreview(reader.result as string);
+      };
+      reader.readAsDataURL(file);
+      form.setValue('image', e.target.files);
     }
   };
 
@@ -90,6 +106,40 @@ export const BrandForm = ({ initialData = null, onSubmit, isLoading }: BrandForm
                   />
                 </FormControl>
                 <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={form.control}
+            name="image"
+            render={({ field: { value, ...field } }) => (
+              <FormItem>
+                <FormLabel>Image</FormLabel>
+                <FormControl>
+                  <Input
+                    type="file"
+                    accept="image/svg"
+                    {...field}
+                    onChange={(e) => {
+                      handleImageChange(e);
+                      field.onChange(e.target.files && e.target.files[0]);
+                    }}
+                  />
+                </FormControl>
+                <FormDescription>Select an image to upload (max 5MB)</FormDescription>
+                <FormMessage />
+                {imagePreview && (
+                  <div className="mt-4">
+                    <Image
+                      src={imagePreview}
+                      alt="Preview"
+                      width={200}
+                      height={200}
+                      className="rounded-md object-cover"
+                    />
+                  </div>
+                )}
               </FormItem>
             )}
           />

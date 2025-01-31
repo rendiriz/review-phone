@@ -25,7 +25,7 @@ export function Add() {
 
   const [isOpen, setIsOpen] = useState(false);
 
-  const { mutate, isPending } = useMutation({
+  const { mutateAsync, isPending } = useMutation({
     mutationFn: (payload: BrandPayload) => {
       return new BrandServiceImpl().create(payload);
     },
@@ -35,7 +35,7 @@ export function Add() {
   });
 
   const handleSubmit = async (input: BrandPayload) => {
-    mutate(input);
+    await mutateAsync(input);
     setIsOpen(false);
   };
 
