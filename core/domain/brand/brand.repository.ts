@@ -6,6 +6,7 @@ import type { Filter } from '@/lib/types/filter';
 export interface BrandRepository {
   list(filter: Filter): Promise<PaginatedBrand>;
   create(payload: BrandPayload): Promise<Brand>;
+  delete(slug: string): Promise<{ message: string }>;
 }
 
 export class BrandRepositoryImpl implements BrandRepository {
@@ -43,6 +44,25 @@ export class BrandRepositoryImpl implements BrandRepository {
 
       if (!response.ok) {
         throw new Error('Failed to create brand');
+      }
+
+      return response.json();
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  async delete(slug: string): Promise<{ message: string }> {
+    try {
+      const response = await fetch(`${API_URL}${API_ENDPOINTS.brands.delete(slug)}`, {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        method: 'DELETE',
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to delete brand');
       }
 
       return response.json();

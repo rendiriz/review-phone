@@ -1,5 +1,7 @@
 'use client';
 
+import { useState } from 'react';
+
 import { Row } from '@tanstack/react-table';
 import { MoreHorizontal } from 'lucide-react';
 
@@ -8,21 +10,26 @@ import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuSeparator,
-  DropdownMenuShortcut,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { BrandSelectSchema } from '@/core/domain/brand/brand.schema';
+
+import { Delete } from './delete';
 
 interface DataTableRowActionsProps<TData> {
   row: Row<TData>;
 }
 
 export function DataTableRowActions<TData>({ row }: DataTableRowActionsProps<TData>) {
+  const [isOpen, setIsOpen] = useState(false);
+
   const brand = BrandSelectSchema.parse(row.original);
 
   return (
-    <DropdownMenu>
+    <DropdownMenu
+      open={isOpen}
+      onOpenChange={(open) => setIsOpen(open)}
+    >
       <DropdownMenuTrigger asChild>
         <Button
           variant="ghost"
@@ -37,11 +44,11 @@ export function DataTableRowActions<TData>({ row }: DataTableRowActionsProps<TDa
         className="w-[160px]"
       >
         <DropdownMenuItem>Edit</DropdownMenuItem>
-        <DropdownMenuSeparator />
-        <DropdownMenuItem>
-          Delete
-          <DropdownMenuShortcut>⌘⌫</DropdownMenuShortcut>
-        </DropdownMenuItem>
+        <Delete
+          slug={brand.slug}
+          isOpenDropdown={isOpen}
+          setIsOpenDropdown={setIsOpen}
+        />
       </DropdownMenuContent>
     </DropdownMenu>
   );

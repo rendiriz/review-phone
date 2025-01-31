@@ -11,5 +11,6 @@ export const API_ENDPOINTS = {
     create: '/brands',
     detail: (slug: string) => `/brands/${slug}`,
     update: (slug: string) => `/brands/${slug}`,
+    delete: (slug: string) => `/brands/${slug}`,
   },
 } as const;
