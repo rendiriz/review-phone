@@ -35,7 +35,11 @@ export function DataTableRowActions<TData>({ row }: DataTableRowActionsProps<TDa
           variant="ghost"
           className="flex h-8 w-8 p-0 data-[state=open]:bg-muted"
         >
-          <MoreHorizontal />
+          <MoreHorizontal
+            size={16}
+            strokeWidth={2}
+            aria-hidden="true"
+          />
           <span className="sr-only">Open menu</span>
         </Button>
       </DropdownMenuTrigger>

@@ -24,7 +24,12 @@ export function DataTableViewOptions<TData>({ table }: DataTableViewOptionsProps
           size="sm"
           className="ml-auto hidden h-8 lg:flex"
         >
-          <Settings2 />
+          <Settings2
+            className="-ms-1 me-2"
+            size={16}
+            strokeWidth={2}
+            aria-hidden="true"
+          />
           View
         </Button>
       </DropdownMenuTrigger>

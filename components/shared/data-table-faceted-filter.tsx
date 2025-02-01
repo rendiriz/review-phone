@@ -42,7 +42,12 @@ export function DataTableFacetedFilter<TData, TValue>({
           size="sm"
           className="h-8 border-dashed"
         >
-          <PlusCircle />
+          <PlusCircle
+            className="-ms-1 me-2"
+            size={16}
+            strokeWidth={2}
+            aria-hidden="true"
+          />
           {title}
           {selectedValues?.size > 0 && (
             <>
@@ -114,7 +119,11 @@ export function DataTableFacetedFilter<TData, TValue>({
                           : 'opacity-50 [&_svg]:invisible',
                       )}
                     >
-                      <Check />
+                      <Check
+                        size={16}
+                        strokeWidth={2}
+                        aria-hidden="true"
+                      />
                     </div>
                     {option.icon && <option.icon className="mr-2 h-4 w-4 text-muted-foreground" />}
                     <span>{option.label}</span>
@@ -133,7 +142,7 @@ export function DataTableFacetedFilter<TData, TValue>({
                 <CommandGroup>
                   <CommandItem
                     onSelect={() => column?.setFilterValue(undefined)}
-                    className="justify-center text-center"
+                    className="cursor-pointer justify-center text-center"
                   >
                     Clear filters
                   </CommandItem>

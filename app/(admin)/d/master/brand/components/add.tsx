@@ -46,7 +46,12 @@ export function Add() {
     >
       <SheetTrigger asChild>
         <Button>
-          <Plus />
+          <Plus
+            className="-ms-1 me-2"
+            size={16}
+            strokeWidth={2}
+            aria-hidden="true"
+          />
           Add Brand
         </Button>
       </SheetTrigger>

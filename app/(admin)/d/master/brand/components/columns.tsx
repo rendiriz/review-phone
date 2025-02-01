@@ -3,8 +3,10 @@
 import { ColumnDef } from '@tanstack/react-table';
 
 import { DataTableColumnHeader } from '@/components/shared/data-table-column-header';
+import { Badge } from '@/components/ui/badge';
 import { statuses } from '@/core/domain/brand/brand.constant';
 import type { Brand } from '@/core/domain/brand/brand.type';
+import { cn } from '@/lib/utils';
 
 import { DataTableRowActions } from './data-table-row-actions';
 
@@ -41,7 +43,16 @@ export const columns: ColumnDef<Brand>[] = [
         return null;
       }
 
-      return status.badge;
+      return (
+        <Badge
+          className={cn(
+            row.getValue('status') === 'inactive' &&
+              'bg-muted-foreground/60 text-primary-foreground',
+          )}
+        >
+          {row.getValue('status')}
+        </Badge>
+      );
     },
     filterFn: (row, id, value) => {
       return value.includes(row.getValue(id));
