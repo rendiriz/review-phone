@@ -41,11 +41,7 @@ export const columns: ColumnDef<Brand>[] = [
         return null;
       }
 
-      return (
-        <div className="flex w-[100px] items-center">
-          <span>{status.label}</span>
-        </div>
-      );
+      return status.badge;
     },
     filterFn: (row, id, value) => {
       return value.includes(row.getValue(id));

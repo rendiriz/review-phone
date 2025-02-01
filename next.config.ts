@@ -13,6 +13,13 @@ const nextConfig: NextConfig = {
       },
       {
         protocol: 'https',
+        hostname: 'twicpics-assets.twic.pics',
+        port: '',
+        pathname: '/lugastudio-review-phone/**',
+        search: '',
+      },
+      {
+        protocol: 'https',
         hostname: 'ik.imagekit.io',
         port: '',
         pathname: '/creativekitabikin/**',
