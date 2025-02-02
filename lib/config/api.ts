@@ -5,6 +5,14 @@ if (!API_URL) {
 }
 
 export const API_ENDPOINTS = {
+  brandTypes: {
+    base: '/brand-types',
+    list: (qs: string) => `/brand-types${qs}`,
+    create: '/brand-types',
+    detail: (slug: string) => `/brand-types/${slug}`,
+    update: (slug: string) => `/brand-types/${slug}`,
+    delete: (slug: string) => `/brand-types/${slug}`,
+  },
   brands: {
     base: '/brands',
     list: (qs: string) => `/brands${qs}`,

@@ -46,11 +46,10 @@ export const columns: ColumnDef<Brand>[] = [
       return (
         <Badge
           className={cn(
-            row.getValue('status') === 'inactive' &&
-              'bg-muted-foreground/60 text-primary-foreground',
+            status.value === 'inactive' && 'bg-muted-foreground/60 text-primary-foreground',
           )}
         >
-          {row.getValue('status')}
+          {status.label}
         </Badge>
       );
     },

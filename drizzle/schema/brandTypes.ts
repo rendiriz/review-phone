@@ -3,24 +3,22 @@ import { index, json, pgEnum, pgTable, text, timestamp, uuid, varchar } from 'dr
 
 import { brandsToBrandTypes } from '@/drizzle/schema';
 
-export const brandStatusEnum = pgEnum('brand_status', [
+export const brandTypeStatusEnum = pgEnum('brand_type_status', [
   'active',
   'inactive',
   'archived',
   'deleted',
 ]);
 
-export const brands = pgTable(
-  'brands',
+export const brandTypes = pgTable(
+  'brand_types',
   {
-    brandId: uuid('brand_id')
+    brandTypeId: uuid('brand_type_id')
       .primaryKey()
       .default(sql`gen_random_uuid()`),
-    slug: varchar('slug', { length: 255 }).notNull().unique(),
-    name: varchar('name', { length: 255 }).notNull(),
-    country: varchar('country', { length: 255 }).notNull(),
-    image: text('image'),
-    status: brandStatusEnum().notNull(),
+    slug: varchar('slug', { length: 50 }).notNull().unique(),
+    name: varchar('name', { length: 50 }).notNull(),
+    status: brandTypeStatusEnum().notNull(),
     description: text('description'),
     metadata: json().$type<any>(),
 
@@ -29,16 +27,16 @@ export const brands = pgTable(
   },
   (table) => {
     return {
-      searchIdx: index('idx_brands_search')
+      searchIdx: index('idx_brand_types_search')
         .using(
           'bm25',
-          sql`brand_id, slug, name, country, image, status, description, metadata, created_at, updated_at`,
+          sql`brand_type_id, slug, name, status, description, metadata, created_at, updated_at`,
         )
-        .with({ key_field: "'brand_id'" }),
+        .with({ key_field: "'brand_type_id'" }),
     };
   },
 );
 
-export const brandsRelations = relations(brands, ({ many }) => ({
+export const brandTypesRelations = relations(brandTypes, ({ many }) => ({
   brandsToBrandTypes: many(brandsToBrandTypes),
 }));
