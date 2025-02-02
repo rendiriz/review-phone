@@ -34,6 +34,10 @@ const data = {
       url: '#',
       items: [
         {
+          title: 'Brand Type',
+          url: '/d/master/brand-type',
+        },
+        {
           title: 'Brand',
           url: '/d/master/brand',
         },

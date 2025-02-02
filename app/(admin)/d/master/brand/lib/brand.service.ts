@@ -40,7 +40,7 @@ export class BrandServiceImpl implements BrandService {
       imageUrl = await this.uploadRepository.uploadR2(payload.image);
     }
 
-    return this.brandRepository.create({ ...payload, image: imageUrl });
+    return await this.brandRepository.create({ ...payload, image: imageUrl });
   }
 
   async update(slug: string, payload: BrandPayload): Promise<{ message: string }> {
