@@ -18,6 +18,7 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
+import MultipleSelector, { Option } from '@/components/ui/multiselect';
 import { Switch } from '@/components/ui/switch';
 import { Textarea } from '@/components/ui/textarea';
 import { BrandFormSchema } from '@/core/domain/brand/brand.schema';
@@ -26,10 +27,16 @@ import { Brand, BrandPayload } from '@/core/domain/brand/brand.type';
 interface BrandFormProps {
   initialData: Brand | null;
   onSubmit: (input: BrandPayload) => Promise<void>;
-  isLoading: boolean;
+  options: {
+    brandTypes: Option[];
+  };
+  isLoading: {
+    brands: boolean;
+    brandTypes: boolean;
+  };
 }
 
-export const BrandForm = ({ initialData = null, onSubmit, isLoading }: BrandFormProps) => {
+export const BrandForm = ({ initialData = null, onSubmit, options, isLoading }: BrandFormProps) => {
   const [imagePreview, setImagePreview] = useState<string | null>(initialData?.image || null);
 
   const form = useForm<BrandPayload>({
@@ -38,13 +45,20 @@ export const BrandForm = ({ initialData = null, onSubmit, isLoading }: BrandForm
       name: '',
       description: '',
       status: 'active',
+      brandType: [],
     },
     mode: 'onChange',
   });
 
   useEffect(() => {
     if (initialData) {
-      form.reset(initialData);
+      const brandType = initialData.brandsToBrandTypes.map((item) => ({
+        id: item.id,
+        value: item.brandType.brandTypeId,
+        label: item.brandType.name,
+      }));
+
+      form.reset({ ...initialData, brandType });
     }
   }, [initialData, form.reset]);
 
@@ -85,6 +99,35 @@ export const BrandForm = ({ initialData = null, onSubmit, isLoading }: BrandForm
                     className={error && 'border-destructive'}
                     placeholder="Name"
                   />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={form.control}
+            name="brandType"
+            render={({ field, fieldState: { error } }) => (
+              <FormItem className="space-y-2">
+                <FormLabel>Brand Type</FormLabel>
+                <FormControl>
+                  {isLoading.brandTypes ? (
+                    'Loading...'
+                  ) : (
+                    <MultipleSelector
+                      {...field}
+                      commandProps={{
+                        label: 'Select brand types',
+                      }}
+                      value={field.value}
+                      defaultOptions={options.brandTypes}
+                      placeholder="Select brand types"
+                      hideClearAllButton
+                      hidePlaceholderWhenSelected
+                      emptyIndicator={<p className="text-center text-sm">No results found</p>}
+                    />
+                  )}
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -168,9 +211,9 @@ export const BrandForm = ({ initialData = null, onSubmit, isLoading }: BrandForm
 
           <Button
             type="submit"
-            disabled={isLoading}
+            disabled={isLoading.brands}
           >
-            {isLoading ? (
+            {isLoading.brands ? (
               <Loader2 className="mr-2 size-4 animate-spin" />
             ) : initialData ? (
               'Edit Brand'

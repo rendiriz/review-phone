@@ -1,6 +1,7 @@
 import { createInsertSchema, createSelectSchema } from 'drizzle-zod';
 import { z } from 'zod';
 
+import { Option } from '@/components/ui/multiselect';
 import { brands } from '@/drizzle/schema/brands';
 
 export const BrandSelectSchema = createSelectSchema(brands);
@@ -10,9 +11,13 @@ export const BrandFormSchema = createInsertSchema(brands, {
   description: (s) => s.optional(),
   image: z.any().optional(),
   status: (s) => s,
-}).pick({
-  name: true,
-  description: true,
-  image: true,
-  status: true,
-});
+})
+  .pick({
+    name: true,
+    description: true,
+    image: true,
+    status: true,
+  })
+  .extend({
+    brandType: z.custom<Option>().array(),
+  });

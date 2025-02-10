@@ -1,3 +1,4 @@
+import { Option } from '@/components/ui/multiselect';
 import { serializeSearchParams } from '@/core/domain/brand-type/brand-type.param';
 import type {
   BrandType,
@@ -13,6 +14,8 @@ export interface BrandTypeRepository {
   create(payload: BrandTypePayload): Promise<BrandType>;
   update(slug: string, payload: BrandTypePayload): Promise<{ message: string }>;
   delete(slug: string): Promise<{ message: string }>;
+  option(filter: Filter): Promise<Option[]>;
+  filter(filter: Filter): Promise<Option[]>;
 }
 
 export class BrandTypeRepositoryImpl implements BrandTypeRepository {
@@ -108,6 +111,50 @@ export class BrandTypeRepositoryImpl implements BrandTypeRepository {
 
       if (!response.ok) {
         throw new Error('Failed to delete brand type');
+      }
+
+      return response.json();
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  async option(filter: Filter): Promise<Option[]> {
+    const serialize = serializeSearchParams(filter);
+    const endpoint = API_ENDPOINTS.brandTypes.option(serialize);
+
+    try {
+      const response = await fetch(`${API_URL}${endpoint}`, {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        method: 'GET',
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to fetch brand types');
+      }
+
+      return response.json();
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  async filter(filter: Filter): Promise<Option[]> {
+    const serialize = serializeSearchParams(filter);
+    const endpoint = API_ENDPOINTS.brandTypes.filter(serialize);
+
+    try {
+      const response = await fetch(`${API_URL}${endpoint}`, {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        method: 'GET',
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to fetch brand types');
       }
 
       return response.json();

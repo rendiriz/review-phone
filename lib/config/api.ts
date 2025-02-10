@@ -8,6 +8,8 @@ export const API_ENDPOINTS = {
   brandTypes: {
     base: '/brand-types',
     list: (qs: string) => `/brand-types${qs}`,
+    option: (qs: string) => `/brand-types/option${qs}`,
+    filter: (qs: string) => `/brand-types/filter${qs}`,
     create: '/brand-types',
     detail: (slug: string) => `/brand-types/${slug}`,
     update: (slug: string) => `/brand-types/${slug}`,

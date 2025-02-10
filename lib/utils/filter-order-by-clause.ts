@@ -11,6 +11,7 @@ const isValidSortDirection = (direction: string): direction is SortDirection => 
 };
 
 export const filterOrderByClause = (
+  table: string,
   columns: string[],
   sortBy: string | undefined,
   sortDir: string | undefined,
@@ -22,5 +23,5 @@ export const filterOrderByClause = (
     return sql`${sql.identifier(normalizedSortBy)} ${sql.raw(normalizedSortDir)}`;
   }
 
-  return sql`updated_at desc`;
+  return sql`${sql.identifier(table)}.updated_at desc`;
 };

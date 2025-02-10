@@ -1,6 +1,7 @@
 'use client';
 
 import { Table } from '@tanstack/react-table';
+import { useAtom } from 'jotai';
 import { Search } from 'lucide-react';
 
 import { DataTableFacetedFilter } from '@/components/shared/data-table-faceted-filter';
@@ -8,11 +9,15 @@ import { DataTableViewOptions } from '@/components/shared/data-table-view-option
 import { DebouncedInput } from '@/components/ui/debounced-input';
 import { statuses } from '@/core/domain/brand/brand.constant';
 
+import { brandTypesFilterAtom } from '../lib/brand.atom';
+
 interface DataTableToolbarProps<TData> {
   table: Table<TData>;
 }
 
 export function DataTableToolbar<TData>({ table }: DataTableToolbarProps<TData>) {
+  const [brandTypes] = useAtom(brandTypesFilterAtom);
+
   return (
     <div className="flex items-center justify-between">
       <div className="flex flex-1 items-center space-x-2">
@@ -30,6 +35,14 @@ export function DataTableToolbar<TData>({ table }: DataTableToolbarProps<TData>)
             />
           </div>
         </div>
+
+        {table.getColumn('type') && (
+          <DataTableFacetedFilter
+            column={table.getColumn('type')}
+            title="Type"
+            options={brandTypes.data || []}
+          />
+        )}
 
         {table.getColumn('status') && (
           <DataTableFacetedFilter

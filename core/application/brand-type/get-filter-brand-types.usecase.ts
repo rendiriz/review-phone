@@ -2,30 +2,25 @@ import 'server-only';
 
 import { createHash } from 'crypto';
 
-import { sql } from 'drizzle-orm';
-
 import { brandTypeCacheKeys } from '@/core/domain/brand-type/brand-type.key';
 import { serializeSearchParams } from '@/core/domain/brand-type/brand-type.param';
 import { db } from '@/drizzle/db';
-import { brandTypes } from '@/drizzle/schema/brandTypes';
 import { redis } from '@/lib/config/redis';
 import type { Filter } from '@/lib/types/filter';
-import { calculatePagination } from '@/lib/utils/calculate-pagination';
-import { createPagination } from '@/lib/utils/create-pagination';
 import { filterOrderByClause } from '@/lib/utils/filter-order-by-clause';
 import { filterWhereClause } from '@/lib/utils/filter-where-clause';
 
 const CACHE_TTL = 3600;
 
-export async function getBrandTypes(filter: Filter) {
+export async function getFilterBrandTypes(filter: Filter) {
   const serialize = serializeSearchParams(filter);
   const hash = createHash('md5').update(serialize).digest('hex');
-  const cacheKey = brandTypeCacheKeys.list(hash);
+  const cacheKey = brandTypeCacheKeys.filter(hash);
 
   const cached = await redis.get(cacheKey);
   if (cached) return JSON.parse(cached);
 
-  const table = 'brand_types';
+  const table = 'brandTypes';
   const searchColumns = [`${table}.name`];
   const sortColumns = ['name', 'status', 'updated_at'];
 
@@ -36,30 +31,17 @@ export async function getBrandTypes(filter: Filter) {
   const conditions = filterWhereClause(table, searchColumns, whereClause);
   const sort = filterOrderByClause(table, sortColumns, filter.sortBy, filter.sortDir);
 
-  const [{ count }] = await db
-    .select({
-      count: sql<number>`count(*)`,
-    })
-    .from(brandTypes)
-    .where(conditions);
+  const data = await db.query.brandTypes.findMany({
+    where: conditions,
+    orderBy: sort,
+  });
 
-  const { currentPage, itemsPerPage, offset } = calculatePagination(filter.page, filter.pageSize);
-  const pagination = createPagination(count, currentPage, itemsPerPage, offset);
-
-  const data = await db
-    .select()
-    .from(brandTypes)
-    .where(conditions)
-    .orderBy(sort)
-    .limit(itemsPerPage)
-    .offset(offset);
-
-  const result = {
-    data,
-    meta: {
-      pagination,
-    },
-  };
+  const result = data.map((item) => {
+    return {
+      value: item.slug,
+      label: item.name,
+    };
+  });
 
   await redis.set(cacheKey, JSON.stringify(result), { EX: CACHE_TTL });
 

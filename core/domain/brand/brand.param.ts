@@ -12,6 +12,7 @@ export const brandsSearchParams = {
   pageSize: parseAsInteger.withDefault(10),
   sortBy: parseAsString.withDefault(''),
   sortDir: parseAsString.withDefault(''),
+  brandType: parseAsArrayOf(parseAsString),
   status: parseAsArrayOf(parseAsString),
 };
 

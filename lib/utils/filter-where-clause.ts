@@ -14,15 +14,15 @@ export function filterSearchCondition(columns: string[], searchTerm?: string) {
     : sql`(${sql.join(searchConditions, sql` OR `)})`;
 }
 
-export function filterArrayCondition(column: string, values?: string[]) {
+export function filterArrayCondition(table: string, column: string, values?: string[]) {
   if (!values?.length) return undefined;
-  return sql`${sql.identifier(column)} IN (${sql.join(
+  return sql`${sql.identifier(table)}.${sql.identifier(column)} IN (${sql.join(
     values.map((value) => sql`${value}`),
     sql`, `,
   )})`;
 }
 
-export function filterWhereClause(columns: string[], filter: Filter) {
+export function filterWhereClause(table: string, columns: string[], filter: Filter) {
   const conditions = [];
 
   if (filter.search) {
@@ -33,12 +33,12 @@ export function filterWhereClause(columns: string[], filter: Filter) {
   Object.entries(filter).forEach(([key, value]) => {
     if (key === 'search') return;
     if (Array.isArray(value)) {
-      const condition = filterArrayCondition(key, value);
+      const condition = filterArrayCondition(table, key, value);
       if (condition) conditions.push(condition);
     }
   });
 
-  conditions.push(sql`status NOT IN ('archived', 'deleted')`);
+  conditions.push(sql`${sql.identifier(table)}.status NOT IN ('archived', 'deleted')`);
 
   if (!conditions.length) return undefined;
 

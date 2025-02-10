@@ -4,6 +4,7 @@ import { ColumnDef } from '@tanstack/react-table';
 
 import { DataTableColumnHeader } from '@/components/shared/data-table-column-header';
 import { Badge } from '@/components/ui/badge';
+import { BrandToBrandType } from '@/core/domain/brand-to-brand-type/brand-to-brand-type.type';
 import { statuses } from '@/core/domain/brand/brand.constant';
 import type { Brand } from '@/core/domain/brand/brand.type';
 import { cn } from '@/lib/utils';
@@ -23,6 +24,33 @@ export const columns: ColumnDef<Brand>[] = [
     ),
     cell: ({ row }) => {
       return <div className="flex w-full">{row.getValue('name')}</div>;
+    },
+  },
+  {
+    id: 'type',
+    meta: 'Type',
+    maxSize: 150,
+    accessorFn: (row) => row.brandsToBrandTypes,
+    header: ({ column }) => (
+      <DataTableColumnHeader
+        column={column}
+        title="Type"
+      />
+    ),
+    enableSorting: false,
+    cell: ({ row }) => {
+      const types = row.getValue('type') as BrandToBrandType[];
+
+      return (
+        <div className="flex gap-2">
+          {types.map((item) => (
+            <Badge key={item.id}>{item.brandType.name}</Badge>
+          ))}
+        </div>
+      );
+    },
+    filterFn: (row, id, value) => {
+      return value.includes(row.getValue(id));
     },
   },
   {

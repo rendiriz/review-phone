@@ -2,11 +2,12 @@ import 'server-only';
 
 import { createHash } from 'crypto';
 
-import { sql } from 'drizzle-orm';
+import { and, eq, inArray, sql } from 'drizzle-orm';
 
 import { brandCacheKeys } from '@/core/domain/brand/brand.key';
 import { serializeSearchParams } from '@/core/domain/brand/brand.param';
 import { db } from '@/drizzle/db';
+import { brandsToBrandTypes, brandTypes } from '@/drizzle/schema';
 import { brands } from '@/drizzle/schema/brands';
 import { redis } from '@/lib/config/redis';
 import type { Filter } from '@/lib/types/filter';
@@ -25,33 +26,59 @@ export async function getBrands(filter: Filter) {
   const cached = await redis.get(cacheKey);
   if (cached) return JSON.parse(cached);
 
-  const searchColumns = ['name'];
-  const sortColumns = ['name', 'updated_at'];
+  const table = 'brands';
+  const searchColumns = [`${table}.name`];
+  const sortColumns = ['name', 'status', 'updated_at'];
 
   const whereClause = {
     search: filter.search,
     ...(filter.status ? { status: filter.status } : {}),
   };
-  const conditions = filterWhereClause(searchColumns, whereClause);
-  const sort = filterOrderByClause(sortColumns, filter.sortBy, filter.sortDir);
+  const conditions = filterWhereClause(table, searchColumns, whereClause);
+  const sort = filterOrderByClause(table, sortColumns, filter.sortBy, filter.sortDir);
 
   const [{ count }] = await db
     .select({
       count: sql<number>`count(*)`,
     })
     .from(brands)
-    .where(conditions);
+    .leftJoin(brandsToBrandTypes, eq(brandsToBrandTypes.brandId, brands.brandId))
+    .leftJoin(brandTypes, eq(brandTypes.brandTypeId, brandsToBrandTypes.brandTypeId))
+    .where(
+      and(
+        conditions,
+        filter.brandType
+          ? inArray(sql`${brandTypes.slug}`, filter.brandType as string[])
+          : undefined,
+      ),
+    );
 
   const { currentPage, itemsPerPage, offset } = calculatePagination(filter.page, filter.pageSize);
   const pagination = createPagination(count, currentPage, itemsPerPage, offset);
 
-  const data = await db
-    .select()
-    .from(brands)
-    .where(conditions)
-    .orderBy(sort)
-    .limit(itemsPerPage)
-    .offset(offset);
+  const data = await db.query.brands.findMany({
+    where: and(
+      conditions,
+      filter.brandType
+        ? sql`exists (
+              select 1 from ${brandsToBrandTypes} bt 
+              join ${brandTypes} bt_type on bt_type.brand_type_id = bt.brand_type_id
+              where bt.brand_id = ${brands.brandId} 
+              and bt_type.slug in (${sql.join(filter.brandType as string[])})
+            )`
+        : undefined,
+    ),
+    orderBy: sort,
+    limit: itemsPerPage,
+    offset: offset,
+    with: {
+      brandsToBrandTypes: {
+        with: {
+          brandType: true,
+        },
+      },
+    },
+  });
 
   const result = {
     data,

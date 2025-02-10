@@ -3,6 +3,7 @@
 import { useState } from 'react';
 
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { useAtom } from 'jotai';
 
 import { BrandForm } from '@/components/composite/brand/brand-form';
 import { DropdownMenuItem } from '@/components/ui/dropdown-menu';
@@ -17,6 +18,7 @@ import {
 import { brandKeys } from '@/core/domain/brand/brand.key';
 import { Brand, BrandPayload } from '@/core/domain/brand/brand.type';
 
+import { brandTypesOptionsAtom } from '../lib/brand.atom';
 import { BrandServiceImpl } from '../lib/brand.service';
 
 interface EditProps {
@@ -29,6 +31,7 @@ export function Edit({ slug, isOpenDropdown, setIsOpenDropdown }: EditProps) {
   const queryClient = useQueryClient();
 
   const [isOpen, setIsOpen] = useState(false);
+  const [brandTypes] = useAtom(brandTypesOptionsAtom);
 
   const { data, isPending, isError } = useQuery({
     queryKey: brandKeys.detail(slug),
@@ -71,7 +74,13 @@ export function Edit({ slug, isOpenDropdown, setIsOpenDropdown }: EditProps) {
             <BrandForm
               initialData={data as Brand}
               onSubmit={handleSubmit}
-              isLoading={isPendingMutation}
+              isLoading={{
+                brands: isPendingMutation,
+                brandTypes: brandTypes.isPending,
+              }}
+              options={{
+                brandTypes: brandTypes.data ?? [],
+              }}
             />
           )}
         </div>

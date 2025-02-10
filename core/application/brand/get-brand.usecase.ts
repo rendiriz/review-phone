@@ -18,6 +18,13 @@ export async function getBrand(slug: string) {
 
   const data = await db.query.brands.findFirst({
     where: eq(brands.slug, slug),
+    with: {
+      brandsToBrandTypes: {
+        with: {
+          brandType: true,
+        },
+      },
+    },
   });
 
   if (!data) {

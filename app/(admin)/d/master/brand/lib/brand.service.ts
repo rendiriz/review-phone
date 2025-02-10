@@ -1,3 +1,8 @@
+import { Option } from '@/components/ui/multiselect';
+import {
+  BrandTypeRepository,
+  BrandTypeRepositoryImpl,
+} from '@/core/domain/brand-type/brand-type.repository';
 import { BrandRepositoryImpl, type BrandRepository } from '@/core/domain/brand/brand.repository';
 import type { Brand, BrandPayload, PaginatedBrand } from '@/core/domain/brand/brand.type';
 import {
@@ -12,17 +17,22 @@ export interface BrandService {
   create(payload: BrandPayload): Promise<Brand>;
   update(slug: string, payload: BrandPayload): Promise<{ message: string }>;
   delete(slug: string): Promise<{ message: string }>;
+  optionBrandType(filter: Filter): Promise<Option[]>;
+  filterBrandType(filter: Filter): Promise<Option[]>;
 }
 
 export class BrandServiceImpl implements BrandService {
   private readonly brandRepository: BrandRepository;
+  private readonly brandTypeRepository: BrandTypeRepository;
   private readonly uploadRepository: UploadRepository;
 
   constructor(
     brandRepository: BrandRepository = new BrandRepositoryImpl(),
+    brandTypeRepository: BrandTypeRepository = new BrandTypeRepositoryImpl(),
     uploadRepository: UploadRepository = new UploadRepositoryImpl(),
   ) {
     this.brandRepository = brandRepository;
+    this.brandTypeRepository = brandTypeRepository;
     this.uploadRepository = uploadRepository;
   }
 
@@ -56,5 +66,13 @@ export class BrandServiceImpl implements BrandService {
 
   async delete(slug: string): Promise<{ message: string }> {
     return await this.brandRepository.delete(slug);
+  }
+
+  async optionBrandType(filter: Filter): Promise<Option[]> {
+    return await this.brandTypeRepository.option(filter);
+  }
+
+  async filterBrandType(filter: Filter): Promise<Option[]> {
+    return await this.brandTypeRepository.filter(filter);
   }
 }

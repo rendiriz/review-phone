@@ -2,7 +2,8 @@
 
 import { useState } from 'react';
 
-import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { useAtom } from 'jotai';
 import { Plus } from 'lucide-react';
 
 import { BrandForm } from '@/components/composite/brand/brand-form';
@@ -18,12 +19,14 @@ import {
 import { brandKeys } from '@/core/domain/brand/brand.key';
 import { BrandPayload } from '@/core/domain/brand/brand.type';
 
+import { brandTypesOptionsAtom } from '../lib/brand.atom';
 import { BrandServiceImpl } from '../lib/brand.service';
 
 export function Add() {
   const queryClient = useQueryClient();
 
   const [isOpen, setIsOpen] = useState(false);
+  const [brandTypes] = useAtom(brandTypesOptionsAtom);
 
   const { mutateAsync, isPending } = useMutation({
     mutationFn: (payload: BrandPayload) => {
@@ -65,7 +68,13 @@ export function Add() {
           <BrandForm
             initialData={null}
             onSubmit={handleSubmit}
-            isLoading={isPending}
+            isLoading={{
+              brands: isPending,
+              brandTypes: brandTypes.isPending,
+            }}
+            options={{
+              brandTypes: brandTypes.data ?? [],
+            }}
           />
         </div>
       </SheetContent>

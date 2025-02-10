@@ -18,18 +18,23 @@ export function BrandClientPage() {
   const [pageSize, setPageSize] = useQueryState('pageSize', parseAsInteger.withDefault(10));
   const [sortBy, setSortBy] = useQueryState('sortBy', { defaultValue: '' });
   const [sortDir, setSortDir] = useQueryState('sortDir', { defaultValue: '' });
+  const [type, setType] = useQueryState('brandType', parseAsArrayOf(parseAsString));
   const [status, setStatus] = useQueryState('status', parseAsArrayOf(parseAsString));
   const [filter, setFilter] = useState<ColumnFiltersState>([]);
 
   useEffect(() => {
     const newFilters: ColumnFiltersState = [];
 
+    if (type) {
+      newFilters.push({ id: 'type', value: type });
+    }
+
     if (status) {
       newFilters.push({ id: 'status', value: status });
     }
 
     setFilter(newFilters);
-  }, [status]);
+  }, [type, status]);
 
   const queryParams = {
     ...(search && { search }),
@@ -37,6 +42,7 @@ export function BrandClientPage() {
     ...(pageSize && { pageSize }),
     ...(sortBy && { sortBy }),
     ...(sortDir && { sortDir }),
+    ...(type && { brandType: type }),
     ...(status && { status }),
   };
 
@@ -48,6 +54,9 @@ export function BrandClientPage() {
 
   const handleFilterChange = (filters: ColumnFiltersState) => {
     setFilter(filters);
+
+    const typeFilter = filters.find((f) => f.id === 'type')?.value as string[] | undefined;
+    setType(typeFilter || null);
 
     const statusFilter = filters.find((f) => f.id === 'status')?.value as string[] | undefined;
     setStatus(statusFilter || null);
